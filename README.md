@@ -21,7 +21,7 @@ When you install this skill, your AI agent gains knowledge of the full AITuber v
 **Claude Code:**
 
 ```bash
-npx skills add aituberapp/aituber-skill
+npx skills add aituberapp/ai-video-skill
 ```
 
 **Cursor:**
@@ -33,7 +33,7 @@ Copy the `SKILL.md` file to your project's `.cursor/skills/` directory.
 Add this repository to your OpenClaw agent configuration:
 
 ```
-aituberapp/aituber-skill
+aituberapp/ai-video-skill
 ```
 
 **Manual install (any agent):**
@@ -63,7 +63,7 @@ Download `SKILL.md` and place it where your AI agent reads skill files.
 | **What it provides** | Knowledge and instructions | Typed tools the AI calls directly |
 | **How it works** | Agent reads SKILL.md and makes API calls | Agent calls MCP tools which proxy to the API |
 | **Best for** | Coding agents that support skills | Any MCP-compatible client |
-| **Install** | `npx skills add aituberapp/aituber-skill` | `npx -y @aituber/mcp-server` |
+| **Install** | `npx skills add aituberapp/ai-video-skill` | `npx -y @aituber/mcp-server` |
 
 For the best experience, use both together. The skill provides context and the MCP server provides execution.
 
