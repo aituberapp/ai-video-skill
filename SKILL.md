@@ -5,12 +5,12 @@ description: >
   captions for YouTube Shorts, TikTok, Instagram Reels, and long-form content. Supports
   AI-generated images, video clips, stock footage, and viral templates like skeleton and
   character styles. Handles the full pipeline: pick a voice, generate a video, poll for
-  completion, export to MP4 and download, or publish to connected YouTube, TikTok, and
-  Instagram channels.
+  completion, export to MP4 and download, or publish to connected YouTube and Instagram
+  channels.
 
   TRIGGER when the user wants to: create an AI video, generate a video from a script or
   idea, list or browse AI voices, export a video to MP4, download a rendered video, list
-  connected channels, publish or schedule a video to YouTube/TikTok/Instagram, check their
+  connected channels, publish or schedule a video to YouTube/Instagram, check their
   AITuber subscription or credit balance, or automate video creation.
 
   DO NOT TRIGGER for: editing existing video files, uploading user-provided video footage,
@@ -34,7 +34,7 @@ metadata:
 
 # AITuber API
 
-Create AI videos from a script or idea. From 15-second Shorts to 7-minute long-form content. The API handles voice narration (1,300+ voices, any language), AI-generated visuals, word-synced captions, MP4 export, and publishing to YouTube, TikTok, and Instagram.
+Create AI videos from a script or idea. From 15-second Shorts to 7-minute long-form content. The API handles voice narration (1,300+ voices, any language), AI-generated visuals, word-synced captions, MP4 export, and publishing to YouTube and Instagram.
 
 **Base URL:** `https://app.aituber.app/api/v1`
 **OpenAPI spec:** `https://app.aituber.app/api/v1/openapi.json`
@@ -155,13 +155,6 @@ curl -X POST "https://app.aituber.app/api/v1/publications" \
         "tags": ["facts", "science"],
         "categoryId": "27"
       },
-      {
-        "channelId": "TIKTOK_CHANNEL_ID",
-        "tiktokPrivacyStatus": "public",
-        "allowComment": true,
-        "allowDuet": true,
-        "allowStitch": true
-      }
     ]
   }'
 ```
@@ -278,7 +271,7 @@ List connected channels for publishing.
 
 | Param | Type | Description |
 |-------|------|-------------|
-| platform | string | Optional filter: `youtube`, `tiktok`, `instagram`, or `all` |
+| platform | string | Optional filter: `youtube`, `instagram`, or `all` |
 
 Response items include: `id`, `platform`, `platformChannelId`, `channelName`, `channelUsername`, `channelThumbnailUrl`, `subscriberCount`, `status`, `lastSyncedAt`.
 
@@ -297,7 +290,6 @@ Publish a completed video to one or more connected channels. The API auto-export
 
 Per-platform channel settings:
 - YouTube: `title`, `tags`, `categoryId`, `madeForKids`
-- TikTok: `tiktokPrivacyStatus`, `allowComment`, `allowDuet`, `allowStitch`
 - Instagram: `instagramPlacement`, `shareToFeed`
 
 ### GET /publications/{publicationId}
