@@ -5,11 +5,13 @@ description: >
   captions for YouTube Shorts, TikTok, Instagram Reels, and long-form content. Supports
   AI-generated images, video clips, stock footage, and viral templates like skeleton and
   character styles. Handles the full pipeline: pick a voice, generate a video, poll for
-  completion, export to MP4, and download.
+  completion, export to MP4 and download, or publish to connected YouTube, TikTok, and
+  Instagram channels.
 
   TRIGGER when the user wants to: create an AI video, generate a video from a script or
-  idea, list or browse AI voices, export a video to MP4, download a rendered video, check
-  their AITuber subscription or credit balance, or automate video creation.
+  idea, list or browse AI voices, export a video to MP4, download a rendered video, list
+  connected channels, publish or schedule a video to YouTube/TikTok/Instagram, check their
+  AITuber subscription or credit balance, or automate video creation.
 
   DO NOT TRIGGER for: editing existing video files, uploading user-provided video footage,
   live streaming, video transcription or captioning of external files, image generation
@@ -52,7 +54,10 @@ Store the key in the `AITUBER_API_KEY` environment variable.
 
 ## Complete Workflow
 
-The typical flow is: **pick voice, generate video, poll status, export, download**.
+AITuber supports two common flows after generation:
+
+- **Export flow:** pick voice, generate video, poll status, export, download
+- **Publish flow:** pick voice, generate video, poll status, list channels, publish, poll publication status
 
 ### Step 1: Pick a voice
 
@@ -121,6 +126,54 @@ curl "https://app.aituber.app/api/v1/exports/download?videoId=VIDEO_ID" \
 ```
 
 Returns `{ "url": "https://...", "videoId": "..." }`. The URL is a signed temporary link that expires in 2 minutes. Download immediately.
+
+### Step 6: Publish to connected channels
+
+Publishing requires channels to already be connected in the AITuber dashboard and an active paid subscription with the Publish feature. If the video is not exported yet, the API starts the export automatically.
+
+List channels:
+
+```bash
+curl "https://app.aituber.app/api/v1/channels" \
+  -H "Authorization: Bearer $AITUBER_API_KEY"
+```
+
+Publish:
+
+```bash
+curl -X POST "https://app.aituber.app/api/v1/publications" \
+  -H "Authorization: Bearer $AITUBER_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "videoId": "VIDEO_ID",
+    "caption": "New short is live",
+    "publishNow": true,
+    "channels": [
+      {
+        "channelId": "YOUTUBE_CHANNEL_ID",
+        "title": "5 Mind-Blowing Facts",
+        "tags": ["facts", "science"],
+        "categoryId": "27"
+      },
+      {
+        "channelId": "TIKTOK_CHANNEL_ID",
+        "tiktokPrivacyStatus": "public",
+        "allowComment": true,
+        "allowDuet": true,
+        "allowStitch": true
+      }
+    ]
+  }'
+```
+
+Poll publication status:
+
+```bash
+curl "https://app.aituber.app/api/v1/publications/PUBLICATION_ID" \
+  -H "Authorization: Bearer $AITUBER_API_KEY"
+```
+
+Poll every 10-15 seconds until the upload reaches a stable state such as `published`, `scheduled`, or `failed`.
 
 ## Endpoints Reference
 
@@ -218,6 +271,40 @@ Get a temporary download URL for a rendered MP4.
 | videoId | string | Finds the latest completed export for this video |
 
 The returned URL expires in 2 minutes. Download immediately.
+
+### GET /channels
+
+List connected channels for publishing.
+
+| Param | Type | Description |
+|-------|------|-------------|
+| platform | string | Optional filter: `youtube`, `tiktok`, `instagram`, or `all` |
+
+Response items include: `id`, `platform`, `platformChannelId`, `channelName`, `channelUsername`, `channelThumbnailUrl`, `subscriberCount`, `status`, `lastSyncedAt`.
+
+### POST /publications
+
+Publish a completed video to one or more connected channels. The API auto-exports to MP4 if needed.
+
+| Param | Type | Required | Description |
+|-------|------|----------|-------------|
+| videoId | string | Yes | Video ID from `POST /videos/generate` or `GET /videos` |
+| sceneExportId | string | No | Optional export ID if you already have a completed export |
+| caption | string | No | Shared description/caption across platforms |
+| publishNow | boolean | No | `true` (default) to publish immediately |
+| scheduledAt | string | No | Required when `publishNow` is `false`; must be a future ISO 8601 datetime |
+| channels | array | Yes | Array of channel objects with `channelId` plus platform-specific settings |
+
+Per-platform channel settings:
+- YouTube: `title`, `tags`, `categoryId`, `madeForKids`
+- TikTok: `tiktokPrivacyStatus`, `allowComment`, `allowDuet`, `allowStitch`
+- Instagram: `instagramPlacement`, `shareToFeed`
+
+### GET /publications/{publicationId}
+
+Get publication status after publishing.
+
+Response fields include: `id`, `videoId`, `channelId`, `title`, `description`, `status`, `platformVideoId`, `platformVideoUrl`, `errorMessage`, `scheduledAt`, `publishedAt`, `createdAt`.
 
 ## Credit Costs
 

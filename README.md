@@ -1,8 +1,8 @@
 # AITuber Skill for AI Agents
 
-Add AI video creation capabilities to Claude Code, Cursor, OpenClaw, Codex, and other AI coding agents. This skill teaches your AI agent how to create fully produced videos with AI narration, visuals, and synced captions for YouTube Shorts, TikTok, Instagram Reels, and long-form content.
+Add AI video creation and publishing capabilities to Claude Code, Cursor, OpenClaw, Codex, and other AI coding agents. This skill teaches your AI agent how to create fully produced videos with AI narration, visuals, synced captions, MP4 exports, and direct publishing to connected YouTube, TikTok, and Instagram channels.
 
-[AITuber](https://aituber.app) | [API Documentation](https://aituber.app/api) | [MCP Server](https://github.com/aituberapp/aituber-mcp) | [Get API Key](https://app.aituber.app/dashboard/api-keys)
+[AITuber](https://aituber.app) | [API Documentation](https://app.aituber.app/api-docs) | [MCP Server](https://github.com/aituberapp/aituber-mcp) | [Get API Key](https://app.aituber.app/dashboard/api-keys)
 
 ## What your agent learns
 
@@ -12,6 +12,7 @@ When you install this skill, your AI agent gains knowledge of the full AITuber v
 - **Generate videos** from a script or idea with AI narration, visuals, and captions
 - **Choose visual styles** from 27+ options (photorealistic, anime, cinematic, 3D Pixar, and more)
 - **Use templates** like skeleton (X-ray viral format) and character-driven stories
+- **List connected channels** and publish or schedule completed videos
 - **Export to MP4** and get a download URL
 - **Check credits** and subscription status
 - **Support any format** including YouTube Shorts (9:16), standard YouTube (16:9), and square (1:1)
@@ -44,7 +45,7 @@ Download `SKILL.md` and place it where your AI agent reads skill files.
 
 1. **Install the skill** using the command above
 2. **Get an API key** from [app.aituber.app/dashboard/api-keys](https://app.aituber.app/dashboard/api-keys)
-3. **Ask your agent** to create a video, and it knows exactly which API endpoints to call, what parameters to use, and how to handle the full workflow
+3. **Ask your agent** to create, export, or publish a video, and it knows which API endpoints to call, what parameters to use, and how to handle the full workflow
 
 ### Example prompts
 
@@ -55,6 +56,8 @@ Download `SKILL.md` and place it where your AI agent reads skill files.
 > "Find me a calm British female voice and create a meditation video"
 
 > "Generate a faceless narration video about the history of coffee with cinematic visuals"
+
+> "List my connected channels and publish my completed video to TikTok and Instagram"
 
 ## Skills vs MCP Server
 
@@ -71,7 +74,7 @@ For the best experience, use both together. The skill provides context and the M
 
 ## API Endpoints
 
-The skill covers all 7 AITuber API endpoints:
+The skill covers all 10 public AITuber API endpoints:
 
 | Endpoint | Description |
 |----------|-------------|
@@ -82,6 +85,9 @@ The skill covers all 7 AITuber API endpoints:
 | `GET /subscription` | Check your plan, credits, and billing info |
 | `POST /exports` | Start rendering a video to MP4 |
 | `GET /exports/download` | Get a temporary download URL for the MP4 |
+| `GET /channels` | List connected YouTube, TikTok, and Instagram channels |
+| `POST /publications` | Publish a completed video to one or more connected channels |
+| `GET /publications/{publicationId}` | Check publication status after publishing |
 
 ## Supported video types
 
@@ -96,7 +102,7 @@ The skill covers all 7 AITuber API endpoints:
 ## Links
 
 - [AITuber](https://aituber.app) - AI video creation tool
-- [API Documentation](https://aituber.app/api) - Interactive API reference
+- [API Documentation](https://app.aituber.app/api-docs) - Interactive API reference
 - [MCP Server](https://github.com/aituberapp/aituber-mcp) - MCP server for Claude, Cursor, OpenClaw
 - [Dashboard](https://app.aituber.app/dashboard) - Manage videos and billing
 - [API Keys](https://app.aituber.app/dashboard/api-keys) - Create and manage your API keys
