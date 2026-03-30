@@ -1,6 +1,6 @@
 # AITuber Skill for AI Agents
 
-Add AI video creation and publishing capabilities to Claude Code, Cursor, OpenClaw, Codex, and other AI coding agents. This skill teaches your AI agent how to create fully produced videos with AI narration, visuals, synced captions, MP4 exports, and direct publishing to connected YouTube, TikTok, and Instagram channels.
+Add AI video creation and publishing capabilities to Claude Code, Cursor, OpenClaw, Codex, and other AI coding agents. This skill teaches your AI agent how to create fully produced videos with AI narration, visuals, synced captions, MP4 exports, and direct publishing to connected YouTube and Instagram channels.
 
 [AITuber](https://aituber.app) | [API Documentation](https://app.aituber.app/api-docs) | [MCP Server](https://github.com/aituberapp/aituber-mcp) | [Get API Key](https://app.aituber.app/dashboard/api-keys)
 
@@ -57,7 +57,7 @@ Download `SKILL.md` and place it where your AI agent reads skill files.
 
 > "Generate a faceless narration video about the history of coffee with cinematic visuals"
 
-> "List my connected channels and publish my completed video to TikTok and Instagram"
+> "List my connected channels and publish my completed video to YouTube and Instagram"
 
 ## Skills vs MCP Server
 
@@ -85,7 +85,7 @@ The skill covers all 10 public AITuber API endpoints:
 | `GET /subscription` | Check your plan, credits, and billing info |
 | `POST /exports` | Start rendering a video to MP4 |
 | `GET /exports/download` | Get a temporary download URL for the MP4 |
-| `GET /channels` | List connected YouTube, TikTok, and Instagram channels |
+| `GET /channels` | List connected YouTube and Instagram channels |
 | `POST /publications` | Publish a completed video to one or more connected channels |
 | `GET /publications/{publicationId}` | Check publication status after publishing |
 
