@@ -34,7 +34,7 @@ metadata:
 
 # AITuber API
 
-Create AI videos from a script or idea. From 15-second Shorts to 7-minute long-form content. The API handles voice narration (1,300+ voices, any language), AI-generated visuals, word-synced captions, MP4 export, and publishing to YouTube and Instagram.
+Create AI videos from a script or idea. From 15-second Shorts to 20-minute long-form content. The API handles voice narration (1,300+ voices, any language), AI-generated visuals, word-synced captions, MP4 export, and publishing to YouTube and Instagram.
 
 **Base URL:** `https://app.aituber.app/api/v1`
 **OpenAPI spec:** `https://app.aituber.app/api/v1/openapi.json`
@@ -226,7 +226,7 @@ Create a new video. Returns `{ videoId, status }`.
 | captionStyleId | string | No | `wrap-1` (default), `hormozi`, `classic`, `karaoke`, `box`, `minimal`, `handwritten`, `neon`. Create custom styles in the dashboard. |
 | captionsEnabled | boolean | No | Default: true |
 | captionPosition | string | No | `bottom` (default), `center`, `top` |
-| expectedDurationSeconds | number | No | Target length in seconds (15-420). Required for idea mode. Max 420 (7 minutes). |
+| expectedDurationSeconds | number | No | Target length in seconds (15-1200). Required for idea mode. Max 1200 (20 minutes) for the default faceless template; max 420 (7 minutes) when `templateId` is `skeleton` or `character`. |
 | templateId | string | No | `skeleton` or `character`. When using a template, do NOT send mediaType, imageStyleId, or imageQuality. The template handles these automatically. |
 | videoQuality | string | No | For video mediaType: `basic`, `good` (default), `premium` |
 
