@@ -221,7 +221,7 @@ Create a new video. Returns `{ videoId, status }`.
 | voiceSpeed | number | No | 0.7 to 1.2. Default: 1.0 |
 | mediaType | string | No | `images` (default), `video`, or `stock`. Ignored when using templates. |
 | aspectRatio | string | No | `9:16` (default), `16:9`, or `1:1` |
-| imageQuality | string | No | For images mediaType: `basic` (1 credit/image), `good` (3), `premium` (9), `max` (45). Ignored when using templates. |
+| imageQuality | string | No | For images mediaType: `basic` (1 credit/image), `good` (6), `premium` (16), `max` (30). Ignored when using templates. |
 | imageStyleId | string | No | Visual style: `photorealistic` (default), `cinematic`, `anime`, `3d-pixar`, `watercolor`, `comic-book`, etc. Ignored when using templates. |
 | captionStyleId | string | No | `wrap-1` (default), `hormozi`, `classic`, `karaoke`, `box`, `minimal`, `handwritten`, `neon`. Create custom styles in the dashboard. |
 | captionsEnabled | boolean | No | Default: true |
