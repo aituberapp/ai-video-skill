@@ -221,6 +221,8 @@ Generates a list of specific, viral-style video topic ideas for a niche or audie
 | prompt | string | Yes | The niche, audience, or theme to brainstorm for. Example: "space facts for a faceless YouTube Shorts channel". |
 | language | string | No | Language for the ideas (ISO 639-1 code like "en", "es", "hi"). Default: "en". |
 | count | number | No | How many ideas to generate (5-15). Default: 10. |
+| source | `tool_page` \| `inline` | No | Where the request came from, for analytics only. Dashboard use; safe to omit. |
+| templateId | string | No | Creation template the request came from, for analytics only. Dashboard use; safe to omit. |
 
 ### POST /scripts
 
@@ -231,6 +233,8 @@ Generates 2 distinct narration script variations for a topic, sized to your targ
 | prompt | string | Yes | The topic or idea to write a script about. Example: "5 mind-blowing facts about the deep ocean". |
 | duration | number | Yes | Target video duration in seconds (15-1200). The script length is sized so narration fits this duration. |
 | language | string | No | Language for the script (ISO 639-1 code like "en", "es", "hi"). Default: English. |
+| source | `tool_page` \| `inline` | No | Where the request came from, for analytics only. Dashboard use; safe to omit. |
+| templateId | string | No | Creation template the request came from, for analytics only. Dashboard use; safe to omit. |
 
 ### GET /image-styles
 
