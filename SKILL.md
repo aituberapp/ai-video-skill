@@ -208,6 +208,38 @@ Returns all available AI voices for video narration, sorted by popularity. **No 
 | language | string | No | Filter to voices optimized for a specific language (ISO 639-1 code). Examples: "en", "es", "fr", "hi", "zh". |
 | search | string | No | Search voices by name or description (case-insensitive). Examples: "roger", "energetic", "calm". |
 
+### GET /voices/cloned
+
+Returns the voices you cloned in the AITuber dashboard.
+
+### POST /ideas
+
+Generates a list of specific, viral-style video topic ideas for a niche or audience.
+
+| Param | Type | Required | Description |
+|-------|------|----------|-------------|
+| prompt | string | Yes | The niche, audience, or theme to brainstorm for. Example: "space facts for a faceless YouTube Shorts channel". |
+| language | string | No | Language for the ideas (ISO 639-1 code like "en", "es", "hi"). Default: "en". |
+| count | number | No | How many ideas to generate (5-15). Default: 10. |
+
+### POST /scripts
+
+Generates 2 distinct narration script variations for a topic, sized to your target duration.
+
+| Param | Type | Required | Description |
+|-------|------|----------|-------------|
+| prompt | string | Yes | The topic or idea to write a script about. Example: "5 mind-blowing facts about the deep ocean". |
+| duration | number | Yes | Target video duration in seconds (15-1200). The script length is sized so narration fits this duration. |
+| language | string | No | Language for the script (ISO 639-1 code like "en", "es", "hi"). Default: English. |
+
+### GET /image-styles
+
+Returns every image style you can use as `imageStyleId` in `POST /videos/generate` (when `mediaType` is `images`): the built-in styles plus any custom styles created in the AITuber dashboard.
+
+### GET /caption-styles
+
+Returns every caption style you can use as `captionStyleId` in `POST /videos/generate`: the built-in styles plus any custom styles created in the AITuber dashboard.
+
 ### POST /videos/generate
 
 Starts generating a new AI video from a script or idea.
@@ -235,7 +267,8 @@ Returns all videos for your organization, sorted newest first.
 
 | Param | Type | Required | Description |
 |-------|------|----------|-------------|
-| limit | number | No | Maximum number of videos to return. Default: 50, max: 100. |
+| limit | number | No | Maximum number of videos to return per page. Default: 50, max: 100. |
+| cursor | string (uuid) | No | Pagination cursor: the `id` of the LAST video from the previous page. Returns videos older than that one. Omit for the first page. An empty array means there are no more videos. |
 
 ### GET /videos/{id}
 
@@ -244,6 +277,51 @@ Returns details for a single video.
 | Param | Type | Required | Description |
 |-------|------|----------|-------------|
 | id | string (uuid) | Yes | The video ID returned from `POST /generate` or `GET /videos`. |
+
+### DELETE /videos/{id}
+
+Permanently deletes a video and its generated assets.
+
+| Param | Type | Required | Description |
+|-------|------|----------|-------------|
+| id | string (uuid) | Yes | The video ID to delete. |
+
+### GET /clip-models
+
+Returns the AI video models available for standalone clip generation, with their capabilities (text-to-video, image-to-video, reference images), supported aspect ratios, resolutions, duration limits, and credit cost per second by resolution.
+
+### POST /clips
+
+Starts generating a single AI video clip (1-15 seconds) from a text prompt, an image, or both.
+
+| Param | Type | Required | Description |
+|-------|------|----------|-------------|
+| title | string | No | Optional clip title. Defaults to the start of the prompt. |
+| modelKey | string | Yes | The generation model to use. Get valid keys, capabilities, and per-second costs from `GET /clip-models`. |
+| prompt | string | No | What the clip should show. Required for text-to-video models; optional when animating from images. |
+| aspectRatio | `16:9` \| `9:16` \| `4:3` \| `3:4` \| `1:1` \| `21:9` | No | Clip dimensions. Check the model's `supportedAspectRatios` from `GET /clip-models`. Default: "16:9". |
+| resolution | string | No | Output resolution (e.g. "720p", "1080p"). Check the model's `supportedResolutions`. Higher resolutions cost more credits per second. Default: "720p". |
+| durationSeconds | integer | No | Clip length in seconds (1-15, model dependent; check `minDurationSeconds`/`maxDurationSeconds`). Default: 5. |
+| firstFrameUrl | string | No | Public image URL to use as the first frame (image-to-video). Only for models with `supportsFirstFrame`. |
+| lastFrameUrl | string | No | Public image URL to use as the last frame. Only for models with `supportsLastFrame`. |
+| referenceImageUrls | array of string | No | Public image URLs used as style/subject references. Only for models with `supportsReferenceImages`; respect `maxReferenceImages`. |
+
+### GET /clips
+
+Returns your standalone AI clips, newest first.
+
+| Param | Type | Required | Description |
+|-------|------|----------|-------------|
+| limit | integer | No | Maximum clips per page (1-50). Default: 20. |
+| cursor | datetime (ISO 8601) | No | Pagination cursor: the `createdAt` of the last clip from the previous page. Omit for the first page. |
+
+### GET /clips/{id}
+
+Returns a clip with its generation status.
+
+| Param | Type | Required | Description |
+|-------|------|----------|-------------|
+| id | string (uuid) | Yes | Clip ID from `POST /clips`. |
 
 ### POST /exports
 
