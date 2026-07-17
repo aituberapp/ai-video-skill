@@ -242,10 +242,50 @@ Gets a media file into your AITuber library and returns an `assetId` you can pas
 
 | Param | Type | Required | Description |
 |-------|------|----------|-------------|
-| purpose | `element-image` | Yes | What this file is for. Only listed purposes are accepted; each unlocks specific endpoints (see the endpoint description). |
-| sourceUrl | string | No | A public URL to download the file from. Use this OR contentType+fileSizeBytes, not both. |
-| contentType | `image/jpeg` \| `image/png` \| `image/webp` | No | The file type for a direct upload. Returns an `uploadUrl` to PUT the bytes to. |
-| fileSizeBytes | integer | No | The file size in bytes for a direct upload. Max 25MB. |
+| purpose | `element-image` \| `ugc-demo` | Yes | What this file is for. Only listed purposes are accepted; each unlocks specific endpoints (see the endpoint description). |
+| sourceUrl | string | No | A public URL to download the file from (image purposes only). Use this OR contentType+fileSizeBytes, not both. |
+| contentType | `image/jpeg` \| `image/png` \| `image/webp` \| `video/mp4` \| `video/quicktime` \| `video/webm` | No | The file type for a direct upload. Returns an `uploadUrl` to PUT the bytes to. Must match the purpose (image vs video). |
+| fileSizeBytes | integer | No | The file size in bytes for a direct upload. Max depends on the purpose (25MB images, 200MB video). |
+| durationSeconds | number | No | For video uploads (ugc-demo): REQUIRED. The clip length in seconds (1-180). Used to time the demo segment. |
+| videoWidth | integer | No | For video uploads (ugc-demo): the pixel width. Recommended so the demo is framed correctly. |
+| videoHeight | integer | No | For video uploads (ugc-demo): the pixel height. Recommended so the demo is framed correctly. |
+
+### GET /ugc/reactions
+
+Returns short clips of a person reacting to camera: the built-in library plus reactions you generated.
+
+### POST /ugc/reactions
+
+Generates a short clip of your character reacting to camera, using image-to-video AI.
+
+| Param | Type | Required | Description |
+|-------|------|----------|-------------|
+| elementId | string (uuid) | Yes | The character element to react. Get IDs from `GET /elements` (type `character`) or create one with `POST /elements`. |
+| hookText | string | No | The hook the character is reacting to. The AI turns it into a fitting expression. Provide this OR reactionPrompt. |
+| reactionPrompt | string | No | Direct control over the reaction, e.g. "shocked, eyes wide, leaning back". Provide this OR hookText. |
+| quality | `good` \| `premium` | No | Generation quality. `premium` costs more and looks better. |
+
+### GET /ugc/reactions/{id}
+
+Returns a reaction you generated.
+
+| Param | Type | Required | Description |
+|-------|------|----------|-------------|
+| id | string (uuid) | Yes | Reaction ID from `POST /ugc/reactions`. |
+
+### POST /ugc/videos
+
+Builds a finished UGC-style hook video: a person reaction clip with your hook text on top, optionally followed by your product demo video.
+
+| Param | Type | Required | Description |
+|-------|------|----------|-------------|
+| reactionId | string (uuid) | Yes | A reaction clip from `GET /ugc/reactions`. |
+| hookText | string | Yes | The on-screen hook text (5-200 characters). |
+| demoVideoAssetId | string (uuid) | No | Optional product demo video, uploaded via `POST /uploads` (purpose `ugc-demo`). Plays after the reaction. |
+| hookTextPosition | `top` \| `center` \| `bottom` | No | Where the hook text sits. |
+| aspectRatio | `9:16` \| `16:9` \| `1:1` | No | Video dimensions. |
+| captionStyleId | string | No | Caption style ID from `GET /caption-styles`. Default: "tiktok". |
+| title | string | No | Optional video title. |
 
 ### POST /ideas
 
