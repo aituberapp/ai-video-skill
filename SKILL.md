@@ -242,17 +242,17 @@ Gets a media file into your AITuber library and returns an `assetId` you can pas
 
 | Param | Type | Required | Description |
 |-------|------|----------|-------------|
-| purpose | `element-image` \| `ugc-demo` | Yes | What this file is for. Only listed purposes are accepted; each unlocks specific endpoints (see the endpoint description). |
+| purpose | `element-image` \| `ugc-demo` \| `music` | Yes | What this file is for. Only listed purposes are accepted; each unlocks specific endpoints (see the endpoint description). |
 | sourceUrl | string | No | A public URL to download the file from (image purposes only). Use this OR contentType+fileSizeBytes, not both. |
-| contentType | `image/jpeg` \| `image/png` \| `image/webp` \| `video/mp4` \| `video/quicktime` \| `video/webm` | No | The file type for a direct upload. Returns an `uploadUrl` to PUT the bytes to. Must match the purpose (image vs video). |
-| fileSizeBytes | integer | No | The file size in bytes for a direct upload. Max depends on the purpose (25MB images, 200MB video). |
-| durationSeconds | number | No | For video uploads (ugc-demo): REQUIRED. The clip length in seconds (1-180). Used to time the demo segment. |
+| contentType | `image/jpeg` \| `image/png` \| `image/webp` \| `video/mp4` \| `video/quicktime` \| `video/webm` \| `audio/mpeg` \| `audio/wav` \| `audio/mp4` \| `audio/x-m4a` \| `audio/aac` | No | The file type for a direct upload. Returns an `uploadUrl` to PUT the bytes to. Must match the purpose (image, video, or audio). |
+| fileSizeBytes | integer | No | The file size in bytes for a direct upload. Max depends on the purpose (25MB images, 200MB video, 50MB audio). |
+| durationSeconds | number | No | For video (ugc-demo, 1-180) and audio (music, 1-600) uploads: REQUIRED. The clip or track length in seconds. Used to time the segment. |
 | videoWidth | integer | No | For video uploads (ugc-demo): the pixel width. Recommended so the demo is framed correctly. |
 | videoHeight | integer | No | For video uploads (ugc-demo): the pixel height. Recommended so the demo is framed correctly. |
 
 ### GET /ugc/reactions
 
-Returns short clips of a person reacting to camera: the built-in library plus reactions you generated.
+Returns short clips of a person reacting to camera, split into `system` (the built-in library) and `custom` (reactions you generated).
 
 ### POST /ugc/reactions
 
@@ -260,9 +260,11 @@ Generates a short clip of your character reacting to camera, using image-to-vide
 
 | Param | Type | Required | Description |
 |-------|------|----------|-------------|
-| elementId | string (uuid) | Yes | The character element to react. Get IDs from `GET /elements` (type `character`) or create one with `POST /elements`. |
-| hookText | string | No | The hook the character is reacting to. The AI turns it into a fitting expression. Provide this OR reactionPrompt. |
+| avatarImageUrl | string | No | Dashboard use only. Public callers pass `elementId` instead; an avatarImageUrl from the public API must be an AITuber-hosted asset URL. |
+| elementId | string (uuid) | No | The character element to react. Get IDs from `GET /elements` (type `character`) or create one with `POST /elements`. |
+| avatarId | string (uuid) | No | Legacy avatar ID. Prefer `elementId`. |
 | reactionPrompt | string | No | Direct control over the reaction, e.g. "shocked, eyes wide, leaning back". Provide this OR hookText. |
+| hookText | string | No | The hook the character is reacting to. The AI turns it into a fitting expression. Provide this OR reactionPrompt. |
 | quality | `good` \| `premium` | No | Generation quality. `premium` costs more and looks better. |
 
 ### GET /ugc/reactions/{id}
@@ -279,13 +281,68 @@ Builds a finished UGC-style hook video: a person reaction clip with your hook te
 
 | Param | Type | Required | Description |
 |-------|------|----------|-------------|
-| reactionId | string (uuid) | Yes | A reaction clip from `GET /ugc/reactions`. |
 | hookText | string | Yes | The on-screen hook text (5-200 characters). |
+| reactionId | string (uuid) | No | A reaction clip from `GET /ugc/reactions`. |
+| ugcVideoId | string (uuid) | No | Dashboard alias for `reactionId`. Public callers use `reactionId`. |
 | demoVideoAssetId | string (uuid) | No | Optional product demo video, uploaded via `POST /uploads` (purpose `ugc-demo`). Plays after the reaction. |
+| demoVideoUrl | string | No | Dashboard use only. Public callers pass `demoVideoAssetId` instead. |
+| demoDurationSeconds | number | No | Dashboard use only. Required when `demoVideoUrl` is set. |
+| demoVideoWidth | integer | No | Dashboard use only. |
+| demoVideoHeight | integer | No | Dashboard use only. |
 | hookTextPosition | `top` \| `center` \| `bottom` | No | Where the hook text sits. |
 | aspectRatio | `9:16` \| `16:9` \| `1:1` | No | Video dimensions. |
+| backgroundMusicId | string (uuid) | No | Dashboard use only. Background music track ID. |
+| backgroundMusicVolume | number | No | Dashboard use only. Background music volume (0-100). |
 | captionStyleId | string | No | Caption style ID from `GET /caption-styles`. Default: "tiktok". |
 | title | string | No | Optional video title. |
+
+### POST /music
+
+Generates an original song from a text prompt using AI.
+
+| Param | Type | Required | Description |
+|-------|------|----------|-------------|
+| prompt | string | Yes | What the song should be about or sound like, e.g. "an upbeat indie pop track about summer road trips". In custom mode this is optional context; the words come from `lyrics` and the sound from `style`. |
+| instrumental | boolean | No | Set true for a track with no vocals or lyrics. |
+| customMode | boolean | No | Set true to control `style`, `title`, and `lyrics` yourself instead of letting the AI decide from `prompt`. |
+| style | string | No | Custom mode only: the musical style, e.g. "lo-fi hip hop, mellow, jazzy piano". |
+| title | string | No | Custom mode only: the song title. |
+| lyrics | string | No | Custom mode only: the exact lyrics to sing. Ignored when `instrumental` is true. |
+
+### GET /music
+
+Lists tracks in your music library: songs you generated with `POST /music` and audio you uploaded with `POST /uploads` (purpose `music`).
+
+### GET /music/{id}
+
+Returns a song you generated.
+
+| Param | Type | Required | Description |
+|-------|------|----------|-------------|
+| id | string (uuid) | Yes | Song ID from `POST /music`. |
+
+### POST /music-videos
+
+Builds a music video: your song plus AI visuals, synced captions, and an optional waveform.
+
+| Param | Type | Required | Description |
+|-------|------|----------|-------------|
+| musicId | string (uuid) | No | A completed song from `POST /music`. Provide this OR `musicAssetId`, not both. |
+| musicAssetId | string (uuid) | No | A track uploaded with `POST /uploads` (purpose `music`). Provide this OR `musicId`, not both. |
+| visualMode | `ai-images` \| `ai-video` \| `cover-image` | Yes | `ai-images` (a new AI image every few seconds), `ai-video` (short AI clips), or `cover-image` (one still for the whole song). |
+| visualDirection | string | No | Optional art direction for the visuals, e.g. "neon cyberpunk city at night, moody". |
+| imageStyleId | string | No | Image style for `ai-images`/`ai-video`. Get IDs from `GET /image-styles`. |
+| imageQuality | `basic` \| `good` \| `premium` \| `max` | No | Image quality for `ai-images` (higher costs more). |
+| secondsPerImage | number | No | For `ai-images`: how many seconds each image is shown. Fewer seconds means more images and more credits. |
+| videoQuality | `basic` \| `good` \| `premium` | No | Clip quality for `ai-video` (higher costs more). |
+| coverImageAssetId | string (uuid) | No | For `cover-image` mode: an image uploaded with `POST /uploads` (purpose `element-image`). Required for that mode. |
+| aspectRatio | `9:16` \| `16:9` \| `1:1` | No | Video dimensions. |
+| captionsEnabled | boolean | No | Show word-synced lyric captions. Automatically off for instrumental tracks. |
+| captionStyleId | string | No | Caption style ID from `GET /caption-styles`. |
+| captionPosition | `top` \| `center` \| `bottom` | No | Where captions sit on screen. |
+| showWaveform | boolean | No | Show an audio waveform animation. |
+| musicTrimStartSeconds | number | No | Start the video at this point in the song (seconds). Defaults to the start. |
+| musicTrimEndSeconds | number | No | End the video at this point in the song (seconds). Defaults to the full length. |
 
 ### POST /ideas
 
