@@ -5,12 +5,12 @@ description: >
   captions for YouTube Shorts, TikTok, Instagram Reels, and long-form content. Supports
   AI-generated images, video clips, stock footage, and viral templates like skeleton and
   character styles. Handles the full pipeline: pick a voice, generate a video, poll for
-  completion, export to MP4 and download, or publish to connected YouTube, TikTok, and
-  Instagram channels.
+  completion, export to MP4 and download, or publish to connected YouTube, TikTok,
+  Instagram, Facebook, Threads, and X channels.
 
   TRIGGER when the user wants to: create an AI video, generate a video from a script or
   idea, list or browse AI voices, export a video to MP4, download a rendered video, list
-  connected channels, publish or schedule a video to YouTube/TikTok/Instagram, check their
+  connected channels, publish or schedule a video to social media, check their
   AITuber subscription or credit balance, or automate video creation.
 
   DO NOT TRIGGER for: editing existing video files, uploading user-provided video footage,
@@ -34,7 +34,7 @@ metadata:
 
 # AITuber API
 
-Create AI videos from a script or idea. From 15-second Shorts to 20-minute long-form content. The API handles voice narration (1,300+ voices, any language), AI-generated visuals, word-synced captions, MP4 export, and publishing to YouTube, TikTok, and Instagram.
+Create AI videos from a script or idea. From 15-second Shorts to 20-minute long-form content. The API handles voice narration (1,300+ voices, any language), AI-generated visuals, word-synced captions, MP4 export, and publishing to YouTube, TikTok, Instagram, Facebook, Threads, and X.
 
 **Base URL:** `https://app.aituber.app/api/v1`
 **OpenAPI spec:** `https://app.aituber.app/api/v1/openapi.json`
@@ -148,7 +148,7 @@ curl "https://app.aituber.app/api/v1/channels" \
   -H "Authorization: Bearer $AITUBER_API_KEY"
 ```
 
-Publish to YouTube, TikTok, and Instagram in one call:
+Publish to YouTube, TikTok, Instagram, Facebook, Threads, and X in one call:
 
 ```bash
 curl -X POST "https://app.aituber.app/api/v1/publications" \
@@ -157,6 +157,7 @@ curl -X POST "https://app.aituber.app/api/v1/publications" \
   -d '{
     "videoId": "VIDEO_ID",
     "caption": "New short is live",
+    "shortCaption": "New short is live. What do you think?",
     "publishNow": true,
     "channels": [
       {
@@ -173,7 +174,10 @@ curl -X POST "https://app.aituber.app/api/v1/publications" \
       {
         "channelId": "INSTAGRAM_CHANNEL_ID",
         "instagramPlacement": "reels"
-      }
+      },
+      { "channelId": "FACEBOOK_CHANNEL_ID" },
+      { "channelId": "THREADS_CHANNEL_ID" },
+      { "channelId": "X_CHANNEL_ID" }
     ]
   }'
 ```
@@ -481,22 +485,23 @@ Returns a temporary signed URL to download the rendered MP4 file for a video.
 
 ### GET /channels
 
-Returns all connected social media channels (YouTube, TikTok, and Instagram) for your organization.
+Returns all connected social media channels (YouTube, TikTok, Instagram, Facebook, Threads, and X) for your organization.
 
 | Param | Type | Required | Description |
 |-------|------|----------|-------------|
-| platform | `youtube` \| `tiktok` \| `instagram` \| `all` | No | Filter by platform. Use "all" or omit to list all connected channels. |
+| platform | `youtube` \| `tiktok` \| `instagram` \| `facebook` \| `threads` \| `x` \| `all` | No | Filter by platform. Use "all" or omit to list all connected channels. |
 
 ### POST /publications
 
-Publishes a completed video to one or more connected social media channels (YouTube, TikTok, and Instagram).
+Publishes a completed video to one or more connected social media channels (YouTube, TikTok, Instagram, Facebook, Threads, and X).
 
 | Param | Type | Required | Description |
 |-------|------|----------|-------------|
 | videoId | string (uuid) | Yes | The video to publish. Must have `status: completed`. |
 | sceneExportId | string (uuid) | No | Optional export ID if the video has already been exported. If omitted, an export is triggered automatically. |
-| caption | string | No | Description/caption shared across all platforms. Used as YouTube description and Instagram caption. Max 2200 characters. |
-| addMadeWithCaption | boolean | No | Add "Made with AITuber, the AI video generator: aituber.app" at the end of the caption. Default: true. The caption is shortened if needed so the total stays within 2200 characters. |
+| caption | string | No | Description or long caption used for YouTube, TikTok, Instagram, and Facebook. Max 2200 characters. |
+| shortCaption | string | No | Short caption shared by X and Threads. It is kept within X's standard weighted 280-character limit. Defaults to `caption` when omitted. |
+| addMadeWithCaption | boolean | No | Add "Made with AITuber, the AI video generator: aituber.app" at the end of each caption. Default: true. Each caption is shortened when needed to stay within its platform limit. |
 | publishNow | boolean | No | Set to `true` (default) to publish immediately. Set to `false` and provide `scheduledAt` to schedule. |
 | scheduledAt | datetime (ISO 8601) | No | ISO 8601 datetime to schedule publication. Must be in the future. Only used when `publishNow` is `false`. |
 | channels | array of objects | Yes | One or more channels to publish to. Each entry can include platform-specific settings. |
