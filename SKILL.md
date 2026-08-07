@@ -184,8 +184,9 @@ curl -X POST "https://app.aituber.app/api/v1/publications" \
 
 Per-platform channel settings:
 - **YouTube:** `title`, `tags`, `categoryId`, `madeForKids`
-- **TikTok:** `tiktokPrivacyStatus`, `allowComment`, `allowDuet`, `allowStitch`, `isAiGenerated`
+- **TikTok:** `tiktokPrivacyStatus`, `allowDuet`, `allowStitch`, `isAiGenerated`
 - **Instagram:** `instagramPlacement`, `shareToFeed`
+- **TikTok and X:** `allowComment`. No other platform lets us change it.
 
 Poll publication status:
 
@@ -510,8 +511,8 @@ Publishes a completed video to one or more connected social media channels (YouT
 | channels[].tags | array of string | No | YouTube tags for search discovery. Max 30 tags, each up to 100 characters. |
 | channels[].categoryId | string | No | YouTube category ID. Default: "22" (People & Blogs). Common: "24" Entertainment, "27" Education, "26" Howto & Style, "28" Science & Technology, "20" Gaming, "10" Music, "17" Sports, "1" Film & Animation, "23" Comedy. |
 | channels[].madeForKids | boolean | No | YouTube COPPA compliance flag. Default: false. |
+| channels[].allowComment | boolean | No | Let viewers comment. Default: true. Only TikTok and X support this. TikTok turns comments off. X has no full off switch, so it limits replies to accounts you mention. Ignored on YouTube, Instagram, Facebook, and Threads. |
 | channels[].tiktokPrivacyStatus | `public` \| `friends` \| `private` | No | Privacy setting. Default: "public". |
-| channels[].allowComment | boolean | No | Allow comments. Default: true. |
 | channels[].allowDuet | boolean | No | Allow duets. Default: true. |
 | channels[].allowStitch | boolean | No | Allow stitches. Default: true. |
 | channels[].isAiGenerated | boolean | No | Label video as AI-generated on TikTok. Default: false. |
