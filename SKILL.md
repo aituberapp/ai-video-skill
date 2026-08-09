@@ -247,7 +247,7 @@ Gets a media file into your AITuber library and returns an `assetId` you can pas
 
 | Param | Type | Required | Description |
 |-------|------|----------|-------------|
-| purpose | `element-image` \| `ugc-demo` \| `music` \| `voice-sample` | Yes | What this file is for. Only listed purposes are accepted; each unlocks specific endpoints (see the endpoint description). |
+| purpose | `clip-reference-image` \| `clip-reference-video` \| `clip-reference-audio` \| `element-image` \| `ugc-demo` \| `music` \| `voice-sample` | Yes | What this file is for. Only listed purposes are accepted; each unlocks specific endpoints (see the endpoint description). |
 | sourceUrl | string | No | A public URL to download the file from (image purposes only). Use this OR contentType+fileSizeBytes, not both. |
 | contentType | `image/jpeg` \| `image/png` \| `image/webp` \| `video/mp4` \| `video/quicktime` \| `video/webm` \| `audio/mpeg` \| `audio/wav` \| `audio/mp4` \| `audio/x-m4a` \| `audio/aac` \| `audio/mp3` \| `audio/wave` \| `audio/x-wav` \| `audio/ogg` \| `audio/webm` | No | The file type for a direct upload. Returns an `uploadUrl` to PUT the bytes to. Must match the purpose (image, video, or audio). |
 | fileSizeBytes | integer | No | The file size in bytes for a direct upload. Max depends on the purpose (25MB images, 200MB video, 50MB audio). |
@@ -442,12 +442,14 @@ Starts generating a single AI video clip (1-30 seconds) from a text prompt, an i
 | title | string | No | Optional clip title. Defaults to the start of the prompt. |
 | modelKey | string | Yes | The generation model to use. Get valid keys, capabilities, and per-second costs from `GET /clip-models`. |
 | prompt | string | No | What the clip should show. Required for text-to-video models; optional when animating from images. |
-| aspectRatio | `16:9` \| `9:16` \| `4:3` \| `3:4` \| `1:1` \| `21:9` | No | Clip dimensions. Check the model's `supportedAspectRatios` from `GET /clip-models`. Default: "16:9". |
+| aspectRatio | `auto` \| `16:9` \| `9:16` \| `4:3` \| `3:4` \| `1:1` \| `21:9` | No | Clip dimensions. Check the model's `supportedAspectRatios` from `GET /clip-models`. Default: "16:9". |
 | resolution | string | No | Output resolution (e.g. "720p", "1080p"). Check the model's `supportedResolutions`. Higher resolutions cost more credits per second. Default: "720p". |
-| durationSeconds | integer | No | Clip length in seconds (1-30, model dependent; check `minDurationSeconds`/`maxDurationSeconds`). Default: 5. |
+| durationSeconds | integer \| `auto` | No | Clip length in seconds, or "auto" for models that support automatic duration. Default: 5. |
 | firstFrameUrl | string | No | Public image URL to use as the first frame (image-to-video). Only for models with `supportsFirstFrame`. |
 | lastFrameUrl | string | No | Public image URL to use as the last frame. Only for models with `supportsLastFrame`. |
 | referenceImageUrls | array of string | No | Public image URLs used as style/subject references. Only for models with `supportsReferenceImages`; respect `maxReferenceImages`. |
+| referenceVideoUrls | array of string | No | Public video URLs used for motion, editing, or extension. Check model capabilities first. |
+| referenceAudioUrls | array of string | No | Public audio URLs used for voice, lip sync, rhythm, or timing. Check model capabilities first. |
 
 ### GET /clips
 
