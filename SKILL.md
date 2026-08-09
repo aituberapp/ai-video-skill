@@ -435,7 +435,7 @@ Returns the AI video models available for standalone clip generation, with their
 
 ### POST /clips
 
-Starts generating a single AI video clip (1-15 seconds) from a text prompt, an image, or both.
+Starts generating a single AI video clip (1-30 seconds) from a text prompt, an image, or both.
 
 | Param | Type | Required | Description |
 |-------|------|----------|-------------|
@@ -444,7 +444,7 @@ Starts generating a single AI video clip (1-15 seconds) from a text prompt, an i
 | prompt | string | No | What the clip should show. Required for text-to-video models; optional when animating from images. |
 | aspectRatio | `16:9` \| `9:16` \| `4:3` \| `3:4` \| `1:1` \| `21:9` | No | Clip dimensions. Check the model's `supportedAspectRatios` from `GET /clip-models`. Default: "16:9". |
 | resolution | string | No | Output resolution (e.g. "720p", "1080p"). Check the model's `supportedResolutions`. Higher resolutions cost more credits per second. Default: "720p". |
-| durationSeconds | integer | No | Clip length in seconds (1-15, model dependent; check `minDurationSeconds`/`maxDurationSeconds`). Default: 5. |
+| durationSeconds | integer | No | Clip length in seconds (1-30, model dependent; check `minDurationSeconds`/`maxDurationSeconds`). Default: 5. |
 | firstFrameUrl | string | No | Public image URL to use as the first frame (image-to-video). Only for models with `supportsFirstFrame`. |
 | lastFrameUrl | string | No | Public image URL to use as the last frame. Only for models with `supportsLastFrame`. |
 | referenceImageUrls | array of string | No | Public image URLs used as style/subject references. Only for models with `supportsReferenceImages`; respect `maxReferenceImages`. |
