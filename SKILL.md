@@ -442,7 +442,7 @@ Starts generating a single AI video clip (1-30 seconds) from a text prompt, an i
 | title | string | No | Optional clip title. Defaults to the start of the prompt. |
 | modelKey | string | Yes | The generation model to use. Get valid keys, capabilities, and per-second costs from `GET /clip-models`. |
 | prompt | string | No | What the clip should show. Required for text-to-video models; optional when animating from images. |
-| aspectRatio | `auto` \| `16:9` \| `9:16` \| `4:3` \| `3:4` \| `1:1` \| `21:9` | No | Clip dimensions. Check the model's `supportedAspectRatios` from `GET /clip-models`. Default: "16:9". |
+| aspectRatio | `auto` \| `16:9` \| `9:16` \| `4:3` \| `3:4` \| `1:1` \| `21:9` \| `3:2` \| `2:3` \| `9:21` \| `5:4` \| `4:5` | No | Clip dimensions. Check the model's `supportedAspectRatios` from `GET /clip-models`. Default: "16:9". |
 | resolution | string | No | Output resolution (e.g. "720p", "1080p"). Check the model's `supportedResolutions`. Higher resolutions cost more credits per second. Default: "720p". |
 | durationSeconds | integer \| `auto` | No | Clip length in seconds, or "auto" for models that support automatic duration. Default: 5. |
 | firstFrameUrl | string | No | Public image URL to use as the first frame (image-to-video). Only for models with `supportsFirstFrame`. |
