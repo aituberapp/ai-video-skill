@@ -247,7 +247,7 @@ Gets a media file into your AITuber library and returns an `assetId` you can pas
 
 | Param | Type | Required | Description |
 |-------|------|----------|-------------|
-| purpose | `clip-reference-image` \| `clip-reference-video` \| `clip-reference-audio` \| `element-image` \| `ugc-demo` \| `music` \| `voice-sample` | Yes | What this file is for. Only listed purposes are accepted; each unlocks specific endpoints (see the endpoint description). |
+| purpose | `clip-reference-image` \| `clip-reference-video` \| `clip-reference-audio` \| `element-image` \| `ugc-demo` \| `music` \| `voice-sample` \| `agent-attachment` | Yes | What this file is for. Only listed purposes are accepted; each unlocks specific endpoints (see the endpoint description). |
 | sourceUrl | string | No | A public URL to download the file from (image purposes only). Use this OR contentType+fileSizeBytes, not both. |
 | contentType | `image/jpeg` \| `image/png` \| `image/webp` \| `video/mp4` \| `video/quicktime` \| `video/webm` \| `audio/mpeg` \| `audio/wav` \| `audio/mp4` \| `audio/x-m4a` \| `audio/aac` \| `audio/mp3` \| `audio/wave` \| `audio/x-wav` \| `audio/ogg` \| `audio/webm` | No | The file type for a direct upload. Returns an `uploadUrl` to PUT the bytes to. Must match the purpose (image, video, or audio). |
 | fileSizeBytes | integer | No | The file size in bytes for a direct upload. Max depends on the purpose (25MB images, 200MB video, 50MB audio). |
