@@ -551,14 +551,14 @@ Returns your current plan and credit balance.
 | Image (good) | 6 credits/image |
 | Image (premium) | 16 credits/image |
 | Image (max) | 30 credits/image |
-| Audio narration | ~50 credits/minute |
+| Audio narration | ~30 credits/minute |
 | AI video clips (basic/good) | 4 credits/second (~20 per 5s clip) |
 | AI video clips (premium) | 10 credits/second (~50 per 5s clip) |
 | Stock footage | ~50 credits/minute |
 | Export to MP4 | Free |
 | Publishing | Free |
 
-A typical 60-second video with basic image quality costs about 67 credits (narration + ~17 images). Before generating, check the balance with `GET /subscription`.
+A typical 60-second video with basic image quality costs about 47 credits (narration + ~17 images). Before generating, check the balance with `GET /subscription`.
 <!-- GENERATED:END credits -->
 
 ## Error Handling
