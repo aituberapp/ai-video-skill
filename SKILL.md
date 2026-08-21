@@ -553,7 +553,8 @@ Returns your current plan and credit balance.
 | Image (max) | 20 credits/image |
 | Each reference photo in a scene | +3 credits |
 | Audio narration | ~30 credits/minute |
-| AI video clips (basic/good) | 4 credits/second (~20 per 5s clip) |
+| AI video clips (basic) | 3 credits/second (~15 per 5s clip) |
+| AI video clips (good) | 4 credits/second (~20 per 5s clip) |
 | AI video clips (premium) | 10 credits/second (~50 per 5s clip) |
 | Stock footage | ~50 credits/minute |
 | Export to MP4 | Free |
