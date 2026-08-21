@@ -341,6 +341,7 @@ Builds a music video: your song plus AI visuals, synced captions, and an optiona
 | secondsPerImage | number | No | For `ai-images`: how many seconds each image is shown. Fewer seconds means more images and more credits. |
 | videoQuality | `basic` \| `good` \| `premium` | No | Clip quality for `ai-video` (higher costs more). |
 | coverImageAssetId | string (uuid) | No | For `cover-image` mode: an image uploaded with `POST /uploads` (purpose `element-image`). Required for that mode. |
+| elementId | string (uuid) | No | A saved character from `GET /elements`. For `ai-images` and `ai-video`, that character's photo is used as a reference in every scene so they look the same. |
 | aspectRatio | `9:16` \| `16:9` \| `1:1` | No | Video dimensions. |
 | captionsEnabled | boolean | No | Show word-synced lyric captions. Automatically off for instrumental tracks. |
 | captionStyleId | string | No | Caption style ID from `GET /caption-styles`. |
