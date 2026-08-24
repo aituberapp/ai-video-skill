@@ -335,7 +335,7 @@ Builds a music video: your song plus AI visuals, synced captions, and an optiona
 | musicId | string (uuid) | No | A completed song from `POST /music`. Provide this OR `musicAssetId`, not both. |
 | musicAssetId | string (uuid) | No | A track uploaded with `POST /uploads` (purpose `music`). Provide this OR `musicId`, not both. |
 | visualMode | `ai-images` \| `ai-video` \| `cover-image` | Yes | `ai-images` (a new AI image every few seconds), `ai-video` (short AI clips), or `cover-image` (one still for the whole song). |
-| visualDirection | string | No | Optional art direction for the visuals, e.g. "neon cyberpunk city at night, moody". |
+| visualDirection | string | No | Optional art direction for the visuals, e.g. "neon cyberpunk city at night, moody". Mention a saved element by @handle (see `GET /elements`) to reuse it, e.g. "@Robo-Cat on a rooftop". Its photo is fed to the image model so it looks the same in every scene it appears in. Each mentioned element adds a reference charge per scene for `ai-images`. |
 | imageStyleId | string | No | Image style for `ai-images`/`ai-video`. Get IDs from `GET /image-styles`. |
 | imageQuality | `basic` \| `good` \| `premium` \| `max` | No | Image quality for `ai-images` (higher costs more). |
 | secondsPerImage | number | No | For `ai-images`: how many seconds each image is shown. Fewer seconds means more images and more credits. |
