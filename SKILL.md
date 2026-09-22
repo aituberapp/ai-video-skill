@@ -251,9 +251,9 @@ Gets a media file into your AITuber library and returns an `assetId` you can pas
 
 | Param | Type | Required | Description |
 |-------|------|----------|-------------|
-| purpose | `clip-reference-image` \| `clip-reference-video` \| `clip-reference-audio` \| `rebuild-still` \| `element-image` \| `visual-style-reference` \| `ugc-demo` \| `music` \| `voice-sample` \| `document-source` \| `agent-attachment` | Yes | What this file is for. Only listed purposes are accepted; each unlocks specific endpoints (see the endpoint description). |
+| purpose | `background-video-library-upload` \| `background-video-upload` \| `clip-reference-image` \| `clip-reference-video` \| `clip-reference-audio` \| `rebuild-still` \| `document-source` \| `element-image` \| `visual-style-reference` \| `ugc-demo` \| `music` \| `voice-sample` \| `agent-attachment` | Yes | What this file is for. Only listed purposes are accepted; each unlocks specific endpoints (see the endpoint description). |
 | sourceUrl | string | No | A public URL to download the file from (image purposes only). Use this OR contentType+fileSizeBytes, not both. |
-| contentType | `image/jpeg` \| `image/png` \| `image/webp` \| `video/mp4` \| `video/quicktime` \| `video/webm` \| `audio/mpeg` \| `audio/wav` \| `audio/mp4` \| `audio/x-m4a` \| `audio/aac` \| `audio/mp3` \| `audio/wave` \| `audio/x-wav` \| `audio/ogg` \| `audio/webm` \| `application/pdf` | No | The file type for a direct upload. Returns an `uploadUrl` to PUT the bytes to. Must match the purpose (image, video, or audio). |
+| contentType | `image/jpeg` \| `image/png` \| `image/webp` \| `video/mp4` \| `video/quicktime` \| `video/webm` \| `audio/mpeg` \| `audio/wav` \| `audio/mp4` \| `audio/x-m4a` \| `audio/aac` \| `audio/mp3` \| `audio/wave` \| `audio/x-wav` \| `audio/ogg` \| `audio/webm` \| `application/pdf` | No | The file type for a direct upload. Returns an `uploadUrl` to PUT the bytes to. Must match the purpose (image, video, audio, or document). |
 | fileSizeBytes | integer | No | The file size in bytes for a direct upload. Max depends on the purpose (25MB images, 200MB video, 50MB audio, 25MB documents). |
 | durationSeconds | number | No | For video (ugc-demo, 1-180) and audio (music, 1-600) uploads: REQUIRED. The clip or track length in seconds. Used to time the segment. |
 | videoWidth | integer | No | For video uploads (ugc-demo): the pixel width. Recommended so the demo is framed correctly. |
@@ -403,7 +403,8 @@ Starts generating a new AI video from a script, an idea, or the text of an artic
 | source.mode | `summarize` \| `read-out` | No | What to do with the text. - `summarize` (default): the AI writes a short narration from the text, faithful to it, about `expectedDurationSeconds` long. - `read-out`: the text itself is the narration, word for word. Nothing is rewritten and no AI writing step runs. `expectedDurationSeconds` is the CEILING here: text longer than that is cut at a sentence end, so the video never runs past the length you asked for. |
 | source.title | string | No | Title of the page or the document, when you know it. Ignored when we read the page ourselves. |
 | source.instructions | string | No | What you want done with the source, e.g. "focus on the cost section" or "keep it upbeat". Max 600 characters. |
-| mediaType | `images` \| `video` \| `stock` \| `avatar` | No | The type of visuals for your video. Each produces a different look and feel. - `images` (default): AI generates a unique image for each segment, displayed with smooth Ken Burns pan/zoom animation. This is the classic "faceless narration video" style used by top YouTube channels. Most popular and cheapest option. Control the look with `imageQuality` and `imageStyleId`. - `video`: AI generates short video clips for each segment. More dynamic and cinematic than images, but costs more credits. Also used internally by the `skeleton` and `character` templates. - `stock`: Automatically finds and matches real stock footage to each segment. Great for news, educational, and documentary-style content. - `avatar`: A talking-head video where an avatar speaks your script. **Requires `avatarId` (from `GET /avatars`) and `voiceId`.** Script mode only (no idea mode), max 5 minutes, aspect ratio `9:16` or `16:9`. Costs ~480 credits per minute of video plus narration, far more than other media types. Generation also takes longer (usually 3-10 minutes). **For most use cases, leave this as default (`images`) unless you are using a template.** When using `templateId`, the template automatically selects the best media type for you, so you do not need to set `mediaType` separately. |
+| backgroundVideoId | string (uuid) | No | For background mode: an id from GET /background-videos. One clip repeats under the full narration; source audio is muted. |
+| mediaType | `images` \| `video` \| `stock` \| `background` \| `avatar` | No | The type of visuals for your video. Each produces a different look and feel. - `images` (default): AI generates a unique image for each segment, displayed with smooth Ken Burns pan/zoom animation. This is the classic "faceless narration video" style used by top YouTube channels. Most popular and cheapest option. Control the look with `imageQuality` and `imageStyleId`. - `video`: AI generates short video clips for each segment. More dynamic and cinematic than images, but costs more credits. Also used internally by the `skeleton` and `character` templates. - `stock`: Automatically finds and matches real stock footage to each segment. Great for news, educational, and documentary-style content. - `avatar`: A talking-head video where an avatar speaks your script. **Requires `avatarId` (from `GET /avatars`) and `voiceId`.** Script mode only (no idea mode), max 5 minutes, aspect ratio `9:16` or `16:9`. Costs ~480 credits per minute of video plus narration, far more than other media types. Generation also takes longer (usually 3-10 minutes). **For most use cases, leave this as default (`images`) unless you are using a template.** When using `templateId`, the template automatically selects the best media type for you, so you do not need to set `mediaType` separately. |
 | avatarId | string (uuid) | No | **Required when `mediaType` is `"avatar"`.** The avatar that speaks your script. Get valid IDs from `GET /avatars` (built-in avatars plus characters created in the dashboard). Ignored for other media types. |
 | motionPrompt | string | No | Optional direction for how the avatar moves and gestures, e.g. "excited, talking with hands, leaning toward the camera". Only applies when `mediaType` is `"avatar"`. |
 | voiceId | string | No | The voice ID for narration. Browse all 1,300+ available voices and listen to previews at `GET /voices`, or use one of your cloned voices from `GET /voices/cloned`. If omitted, defaults to "Adam", a deep, natural American male voice. **Exception: required when `mediaType` is `"avatar"`** (no default; pick a voice that fits the avatar, or use its `defaultVoiceId` from `GET /avatars`). Filter voices by gender, accent, or use case using the `GET /voices` endpoint query parameters. Use the `previewUrl` from each voice to hear a sample before selecting. |
@@ -556,6 +557,28 @@ Cancels a future scheduled publication before it goes live.
 ### GET /subscription
 
 Returns your current plan and credit balance.
+
+### GET /background-videos
+
+List background videos **No auth required.**
+
+| Param | Type | Required | Description |
+|-------|------|----------|-------------|
+| categorySlug | string | No |  |
+| cursor | string (uuid) | No |  |
+
+### GET /background-videos/categories
+
+List background video categories **No auth required.**
+
+### POST /uploads/confirm-background-video
+
+Confirm a background video upload **No auth required.**
+
+| Param | Type | Required | Description |
+|-------|------|----------|-------------|
+| assetId | string (uuid) | Yes |  |
+| title | string | Yes |  |
 <!-- GENERATED:END endpoints -->
 
 ## Credit Costs
@@ -574,6 +597,7 @@ Returns your current plan and credit balance.
 | AI video clips (premium) | 26 credits/second (~130 per 5s clip) |
 | AI video clips (max) | 30 credits/second (~150 per 5s clip) |
 | Stock footage | ~50 credits/minute |
+| Background video | 10 credits/minute, plus narration |
 | Export to MP4 | Free |
 | Publishing | Free |
 
