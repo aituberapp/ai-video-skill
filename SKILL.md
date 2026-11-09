@@ -534,7 +534,7 @@ Publishes a completed video to one or more connected social media channels (YouT
 | channels[].tiktokPrivacyStatus | `public` \| `friends` \| `private` | No | Privacy setting. Default: "public". |
 | channels[].allowDuet | boolean | No | Allow duets. Default: true. |
 | channels[].allowStitch | boolean | No | Allow stitches. Default: true. |
-| channels[].isAiGenerated | boolean | No | Label video as AI-generated on TikTok. Default: false. |
+| channels[].isAiGenerated | boolean | No | Label video as AI-generated on TikTok. Default: true. |
 | channels[].instagramPlacement | `reels` \| `stories` \| `timeline` | No | Instagram: where to post. Default: "reels". |
 | channels[].shareToFeed | boolean | No | Instagram: also share Reel to feed. Default: true. |
 
